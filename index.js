@@ -75,7 +75,8 @@ function processData (allSuggestionsRaw) {
     "employment": ["job", "unemployed", "money", "career", "school", "broke", "homeless"],
     "apeparance_acne": ["acne", "face"],
     "appearance_weight": ["weight", "weigh", "fat"],
-    "appearance": [ "height", "stretch mark", "hair", "beard", "tall"],
+    "appearance_hair": ["hair", "beard"],
+    "appearance": [ "height", "stretch mark", "tall"],
     "health": ["tired", "depressed", "hurt", "health", "blood pressure", "energy"],
     "": []
   };
