@@ -68,9 +68,43 @@ function processData (allSuggestionsRaw) {
     })
   }
 
+
+  var categoryKeywords = {
+    "relationships": ["boyfriend", "girlfriend", "single", "virgin", "married", "crush", "friends"],
+    "fertility": ["period", "pregnant", "pregnancy"],
+    "employment": ["job", "unemployed", "money", "career", "school", "broke", "homeless"],
+    "apeparance_acne": ["acne", "face"],
+    "appearance_weight": ["weight", "weigh", "fat"],
+    "appearance": [ "height", "stretch mark", "hair", "beard", "tall"],
+    "health": ["tired", "depressed", "hurt", "health", "blood pressure", "energy"],
+    "": []
+  };
+  var categoryList = Object.keys(categoryKeywords);
+  var colorScale = d3.scale.category10();
+
+
+  suggestionArray = suggestionArray.map(function (d) {
+
+      d.category = ""
+      for (cat in categoryKeywords){
+        for (i in categoryKeywords[cat]){
+          var keyword = categoryKeywords[cat][i];
+          if (d.suggestion.includes(keyword)){
+            d.category = cat;
+          }
+        }
+      }
+
+      d.categoryIndex = categoryList.indexOf(d.category);
+      return d;
+    });
+
+
   suggestionArray = suggestionArray.sort(function (a, b) {
-    return b.ages.length - a.ages.length;
+    return (a.categoryIndex == b.categoryIndex) ? (b.ages.length - a.ages.length) : (b.categoryIndex - a.categoryIndex);
   });
+
+
 
   return suggestionArray;
 
@@ -106,6 +140,8 @@ function draw (allSuggestions, ageMin, ageMax) {
     .attr('class', 'x-axis')
     .attr('transform', 'translate(' + 0 + ',' + 50 + ')')
     .call(xAxis);
+
+  var colorScale = d3.scale.category10();
 
   var lines = svg.append('g').selectAll('.lines')
     .data(allSuggestions)
@@ -143,6 +179,7 @@ function draw (allSuggestions, ageMin, ageMax) {
     .enter()
       .append('text')
         .attr('y', function (d, i) { return scaleY(i); })
-        .text(function (d) { return d.suggestion; });
+        .text(function (d) { return d.suggestion; })
+        .style("fill", function(d){ return colorScale(d.categoryIndex);  });
 
 }
